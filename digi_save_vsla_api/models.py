@@ -45,7 +45,7 @@ class Users(models.Model):
     unique_code = models.TextField()
     fname = models.TextField()
     lname = models.TextField()
-    email = models.TextField()
+    email = models.TextField(default=None, blank=True, null=True)
     phone = models.TextField()
     sex = models.TextField()
     country = models.TextField()
@@ -58,7 +58,7 @@ class Users(models.Model):
     family_information = models.TextField()
     next_of_kin_name = models.TextField()
     next_of_kin_has_phone_number = models.BooleanField()
-    next_of_kin_phone_number = models.TextField()
+    next_of_kin_phone_number = models.TextField(default=None, blank=True, null=True)
     pwd_type = models.TextField()
     
     def __str__(self):

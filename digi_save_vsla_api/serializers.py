@@ -46,6 +46,11 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
+        extra_kwargs = {
+            'email': {'required': False},
+            'next_of_kin_phone_number': {'required': False}
+        }
+
         
 class GroupFeesSerializer(serializers.ModelSerializer):
     class Meta:
