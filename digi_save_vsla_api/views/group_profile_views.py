@@ -6,6 +6,7 @@ from digi_save_vsla_api.serializers import GroupProfileSerializer
 
 @api_view(['GET', 'POST'])
 def group_profile_list(request):
+    print("Received data:", request.data)
     if request.method == 'GET':
         group_profiles = GroupProfile.objects.all()
         serializer = GroupProfileSerializer(group_profiles, many=True)

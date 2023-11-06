@@ -6,12 +6,14 @@ from digi_save_vsla_api.serializers import UsersSerializer
 
 @api_view(['GET', 'POST'])
 def users_list(request):
+    print("Received data:", request.data)
     if request.method == 'GET':
         users = Users.objects.all()
         serializer = UsersSerializer(users, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        print("Received data:", request.data)  # Add this line for debugging
         serializer = UsersSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -19,6 +21,7 @@ def users_list(request):
         else:
             print(serializer.errors)  # Add this line for debugging
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

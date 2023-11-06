@@ -29,6 +29,7 @@ from digi_save_vsla_api.views.social_fund_applications_views import social_fund_
 from digi_save_vsla_api.views.social_views import social_detail, social_list
 from digi_save_vsla_api.views.users_views import users_detail, users_list
 from digi_save_vsla_api.views.welfare_account_views import welfare_account_detail, welfare_account_list
+from digi_save_vsla_api.views.auth_view import login_with_phone_code
 
 urlpatterns = [
     # GroupProfile views
@@ -42,6 +43,7 @@ urlpatterns = [
     # Users views
     path('users/', users_list, name='users_list'),
     path('users/<int:pk>/', users_detail, name='users_detail'),
+    path('login-with-phone-code/', login_with_phone_code, name='login_with_phone_code'),
 
     # GroupMembers views
     path('group_members/', group_members_list, name='group_members_list'),

@@ -7,33 +7,35 @@ class GroupProfile(models.Model):
     meetingLocation = models.TextField()
     groupStatus = models.TextField()
     groupLogoPath = models.TextField()
-    partnerID = models.TextField()
+    partnerID = models.TextField(default=None, blank=True, null=True)
     workingWithPartner = models.TextField()
     isWorkingWithPartner = models.BooleanField()
-    numberOfCycles = models.TextField()
-    numberOfMeetings = models.TextField()
+    numberOfCycles = models.TextField(default=None, blank=True, null=True)
+    numberOfMeetings = models.TextField(default=None, blank=True, null=True)
     loanFund = models.TextField()
     socialFund = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.groupName
 
 
 class ConstitutionTable(models.Model):
-    hasConstitution = models.BooleanField()
-    constitutionFiles = models.BinaryField()
-    usesGroupShares = models.BooleanField()
+    hasConstitution = models.IntegerField()
+    constitutionFiles = models.TextField(default=None, blank=True, null=True)
+    usesGroupShares = models.IntegerField()
     shareValue = models.FloatField()
     maxSharesPerMember = models.IntegerField()
     minSharesRequired = models.IntegerField()
     frequencyOfContributions = models.TextField()
-    offersLoans = models.BooleanField()
+    offersLoans = models.IntegerField()
     maxLoanAmount = models.FloatField()
     interestRate = models.FloatField()
     interestMethod = models.TextField()
     loanTerms = models.TextField()
     registrationFee = models.TextField()
-    selectedCollateralRequirements = models.TextField()
+    selectedCollateralRequirements = models.TextField(default=None, blank=True, null=True)
+    sync_flag = models.IntegerField(default=1)
     
     group_id = models.OneToOneField(GroupProfile, on_delete=models.CASCADE)
     
@@ -60,6 +62,7 @@ class Users(models.Model):
     next_of_kin_has_phone_number = models.BooleanField()
     next_of_kin_phone_number = models.TextField(default=None, blank=True, null=True)
     pwd_type = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return f"{self.fname} {self.lname}"
@@ -67,11 +70,10 @@ class Users(models.Model):
 class GroupMembers(models.Model):
     users = models.ForeignKey(Users, on_delete=models.CASCADE)
     group = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
-    
-
 
 class CycleSchedules(models.Model):
     group = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
@@ -81,6 +83,7 @@ class CycleSchedules(models.Model):
     day_of_week = models.TextField()
     start_date = models.TextField()
     share_out_date = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
@@ -88,6 +91,7 @@ class CycleSchedules(models.Model):
 
 class Positions(models.Model):
     name = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.name
@@ -96,6 +100,7 @@ class AssignedPositions(models.Model):
     position = models.ForeignKey(Positions, on_delete=models.CASCADE)
     member = models.ForeignKey(GroupMembers, on_delete=models.CASCADE)
     group = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.position
@@ -108,6 +113,7 @@ class GroupForm(models.Model):
     cycle_schedule = models.ForeignKey(CycleSchedules, on_delete=models.CASCADE)
     group_member = models.ForeignKey(GroupMembers, on_delete=models.CASCADE)
     assigned_position = models.ForeignKey(AssignedPositions, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -117,6 +123,7 @@ class SavingsAccount(models.Model):
     date = models.TextField()
     purpose = models.TextField()
     amount = models.FloatField()
+    sync_flag = models.IntegerField(default=1)
     
     group = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
     users = models.ForeignKey(Users, on_delete=models.CASCADE)
@@ -128,6 +135,7 @@ class GroupFees(models.Model):
     member = models.ForeignKey(GroupMembers, on_delete=models.CASCADE)
     group_id = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
     registration_fee = models.FloatField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.member
@@ -150,6 +158,7 @@ class CycleMeeting(models.Model):
     totalSocialFund = models.IntegerField()
     socialFundContributions = models.TextField()
     sharePurchases = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     group_id = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
     
@@ -174,6 +183,7 @@ class Meeting(models.Model):
     sharePurchases = models.TextField()
     totalLoanFund = models.IntegerField()
     totalSocialFund = models.IntegerField()
+    sync_flag = models.IntegerField(default=1)
     
     group_id = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
     cycle_id = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
@@ -191,6 +201,7 @@ class MemberShares(models.Model):
     users = models.ForeignKey(Users, on_delete=models.CASCADE)
     cycle_id = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
     cyclemeeting = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -203,6 +214,7 @@ class WelfareAccount(models.Model):
     users = models.ForeignKey(Users, on_delete=models.CASCADE)
     meeting_id = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     cycle_id = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -211,6 +223,7 @@ class ActiveCycleMeeting(models.Model):
     
     group_id = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
     cycleMeetingID = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -221,6 +234,7 @@ class Shares(models.Model):
     meetingId = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     cycle_id = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
     group_id = models.ForeignKey(GroupForm, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -228,6 +242,7 @@ class Shares(models.Model):
 
 class Social(models.Model):
     socialFund = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     meetingId = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     
@@ -238,6 +253,7 @@ class GroupLink(models.Model):
     group_id = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
     group_name = models.TextField()
     group_image_path = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     constitution = models.ForeignKey(ConstitutionTable, on_delete=models.CASCADE)
     cycle_schedule = models.ForeignKey(CycleSchedules, on_delete=models.CASCADE)
     group_members = models.ForeignKey(GroupMembers, on_delete=models.CASCADE)
@@ -256,6 +272,7 @@ class LoanApplications(models.Model):
     amount_needed = models.FloatField()
     loan_purpose = models.TextField()
     repayment_date = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -271,6 +288,7 @@ class SocialFundApplications(models.Model):
     amount_needed = models.FloatField()
     social_purpose = models.TextField()
     repayment_date = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group_id
@@ -294,6 +312,7 @@ class CycleStartMeeting(models.Model):
     social_fund_bag = models.TextField()
     social_fund_contributions = models.TextField()
     share_purchases = models.TextField()
+    sync_flag = models.IntegerField(default=1)
 
 
 class PaymentInfo(models.Model):
@@ -303,6 +322,7 @@ class PaymentInfo(models.Model):
     meeting_id = models.ForeignKey(GroupMembers, on_delete=models.CASCADE)
     payment_amount = models.FloatField()
     payment_date = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
@@ -316,6 +336,7 @@ class Fines(models.Model):
     cycleId = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
     meetingId = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     savingsAccountId = models.ForeignKey(SavingsAccount, on_delete=models.CASCADE)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.groupId
@@ -325,6 +346,7 @@ class GroupCycleStatus(models.Model):
     group = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
     cycleId = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
     is_cycle_started = models.BooleanField(default=False)
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
@@ -339,6 +361,7 @@ class Loans(models.Model):
     start_date = models.TextField()
     end_date = models.TextField()
     status = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
@@ -351,6 +374,7 @@ class LoanDisbursement(models.Model):
     loan = models.ForeignKey(Loans, on_delete=models.CASCADE)
     disbursement_amount = models.FloatField()
     disbursement_date = models.DateField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group
@@ -362,6 +386,7 @@ class LoanPayments(models.Model):
     loan = models.ForeignKey(Loans, on_delete=models.CASCADE)
     payment_amount = models.FloatField()
     payment_date = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     def __str__(self):
         return self.group
 
@@ -371,6 +396,7 @@ class ShareOut(models.Model):
     cycleId = models.ForeignKey(CycleMeeting, on_delete=models.CASCADE)
     users = models.ForeignKey(Users, on_delete=models.CASCADE)
     share_value = models.FloatField()
+    sync_flag = models.IntegerField(default=1)
     def __str__(self):
         return self.group
 
@@ -383,6 +409,7 @@ class ReversedTransactions(models.Model):
     date = models.TextField()
     purpose = models.TextField()
     reversed_data = models.TextField()
+    sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
         return self.group

@@ -6,17 +6,21 @@ from digi_save_vsla_api.serializers import ConstitutionTableSerializer
 
 @api_view(['GET', 'POST'])
 def constitution_table_list(request):
+    print("Received data:", request.data)
     if request.method == 'GET':
         constitution_tables = ConstitutionTable.objects.all()
         serializer = ConstitutionTableSerializer(constitution_tables, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        # print("Received data:", request.data)
         serializer = ConstitutionTableSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print("Validation Errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def constitution_table_detail(request, pk):
