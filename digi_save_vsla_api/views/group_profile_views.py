@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -6,20 +8,85 @@ from digi_save_vsla_api.serializers import GroupProfileSerializer
 
 @api_view(['GET', 'POST'])
 def group_profile_list(request):
+<<<<<<< HEAD
+    data = request.data
+    print("Received data:", data.get('groupName'))
+    try:
+        if request.method == 'POST':
+            
+            print("Received data:", data)
+            groupName = data.get('groupName')
+            countryOfOrigin = data.get('countryOfOrigin')
+            meetingLocation = data.get('meetingLocation')
+            groupStatus = data.get('groupStatus')
+            groupLogoPath = data.get('groupLogoPath')
+            partnerID = data.get('partnerID')
+            workingWithPartner = data.get('workingWithPartner')
+            isWorkingWithPartner = data.get('isWorkingWithPartner')
+            numberOfCycles = data.get('numberOfCycles')
+            numberOfMeetings = data.get('numberOfMeetings')
+            loanFund = data.get('loanFund')
+            socialFund = data.get('socialFund')
+=======
     print("Received data:", request.data)
     if request.method == 'GET':
         group_profiles = GroupProfile.objects.all()
         serializer = GroupProfileSerializer(group_profiles, many=True)
         return Response(serializer.data)
+>>>>>>> master
 
-    elif request.method == 'POST':
-        serializer = GroupProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            group_profile = GroupProfile(
+                groupName=groupName,
+                countryOfOrigin=countryOfOrigin,
+                meetingLocation=meetingLocation,
+                groupStatus=groupStatus,
+                groupLogoPath=groupLogoPath,
+                partnerID=partnerID,
+                workingWithPartner=workingWithPartner,
+                isWorkingWithPartner=isWorkingWithPartner,
+                numberOfCycles=numberOfCycles,
+                numberOfMeetings=numberOfMeetings,
+                loanFund=loanFund,
+                socialFund=socialFund,
+            )
+            group_profile.save()
 
-@api_view(['GET', 'PUT', 'DELETE'])
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Group profile created successfully',
+            })
+
+        if request.method == 'GET':
+            group_profiles = GroupProfile.objects.all()
+            group_profile_data = ()
+            for group_profile in group_profiles:
+                group_profile_data.append({
+                    'id': group_profile.id,
+                    'groupName': group_profile.groupName,
+                    'countryOfOrigin': group_profile.countryOfOrigin,
+                    'meetingLocation': group_profile.meetingLocation,
+                    'groupStatus': group_profile.groupStatus,
+                    'groupLogoPath': group_profile.groupLogoPath,
+                    'partnerID': group_profile.partnerID,
+                    'workingWithPartner': group_profile.workingWithPartner,
+                    'isWorkingWithPartner': group_profile.isWorkingWithPartner,
+                    'numberOfCycles': group_profile.numberOfCycles,
+                    'numberOfMeetings': group_profile.numberOfMeetings,
+                    'loanFund': group_profile.loanFund,
+                    'socialFund': group_profile.socialFund,
+                })
+            return JsonResponse({
+                'status': 'success',
+                'group_profiles': group_profile_data,
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e),
+        }, status=500)
+
+@api_view(('GET', 'PUT', 'DELETE'))
 def group_profile_detail(request, pk):
     try:
         group_profile = GroupProfile.objects.get(pk=pk)
