@@ -43,13 +43,15 @@ class PositionsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class UsersSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Users
         fields = '__all__'
-        extra_kwargs = {
-            'email': {'required': False},
-            'next_of_kin_phone_number': {'required': False}
-        }
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('id', 'fname', 'lname')
 
         
 class GroupFeesSerializer(serializers.ModelSerializer):
