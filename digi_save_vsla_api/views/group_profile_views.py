@@ -8,6 +8,7 @@ from digi_save_vsla_api.serializers import GroupProfileSerializer
 
 @api_view(['GET', 'POST'])
 def group_profile_list(request):
+<<<<<<< HEAD
     data = request.data
     print("Received data:", data.get('groupName'))
     try:
@@ -26,6 +27,13 @@ def group_profile_list(request):
             numberOfMeetings = data.get('numberOfMeetings')
             loanFund = data.get('loanFund')
             socialFund = data.get('socialFund')
+=======
+    print("Received data:", request.data)
+    if request.method == 'GET':
+        group_profiles = GroupProfile.objects.all()
+        serializer = GroupProfileSerializer(group_profiles, many=True)
+        return Response(serializer.data)
+>>>>>>> master
 
             group_profile = GroupProfile(
                 groupName=groupName,

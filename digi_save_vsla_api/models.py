@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class GroupProfile(models.Model):
+<<<<<<< HEAD
     groupName = models.CharField(max_length=255, default=None, blank=True, null=True)
     countryOfOrigin = models.CharField(max_length=255, default=None, blank=True, null=True)
     meetingLocation = models.CharField(max_length=255, default=None, blank=True, null=True)
@@ -16,10 +17,27 @@ class GroupProfile(models.Model):
     socialFund = models.CharField(max_length=255, default=None, blank=True, null=True)
     sync_flag = models.IntegerField(default=0)
 
+=======
+    groupName = models.TextField()
+    countryOfOrigin = models.TextField()
+    meetingLocation = models.TextField()
+    groupStatus = models.TextField()
+    groupLogoPath = models.TextField()
+    partnerID = models.TextField(default=None, blank=True, null=True)
+    workingWithPartner = models.TextField()
+    isWorkingWithPartner = models.BooleanField()
+    numberOfCycles = models.TextField(default=None, blank=True, null=True)
+    numberOfMeetings = models.TextField(default=None, blank=True, null=True)
+    loanFund = models.TextField()
+    socialFund = models.TextField()
+    sync_flag = models.IntegerField(default=1)
+    
+>>>>>>> master
     def __str__(self):
         return self.groupName
     
 class ConstitutionTable(models.Model):
+<<<<<<< HEAD
     group_id = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
     hasConstitution = models.IntegerField(default=None, blank=True, null=True)
     constitutionFiles = models.BinaryField(default=None, blank=True, null=True)
@@ -36,6 +54,28 @@ class ConstitutionTable(models.Model):
     registrationFee = models.CharField(max_length=255, default=None, blank=True, null=True)
     selectedCollateralRequirements = models.CharField(max_length=255, default=None, blank=True, null=True)
     sync_flag = models.IntegerField(default=0)
+=======
+    hasConstitution = models.IntegerField()
+    constitutionFiles = models.TextField(default=None, blank=True, null=True)
+    usesGroupShares = models.IntegerField()
+    shareValue = models.FloatField()
+    maxSharesPerMember = models.IntegerField()
+    minSharesRequired = models.IntegerField()
+    frequencyOfContributions = models.TextField()
+    offersLoans = models.IntegerField()
+    maxLoanAmount = models.FloatField()
+    interestRate = models.FloatField()
+    interestMethod = models.TextField()
+    loanTerms = models.TextField()
+    registrationFee = models.TextField()
+    selectedCollateralRequirements = models.TextField(default=None, blank=True, null=True)
+    sync_flag = models.IntegerField(default=1)
+    
+    group_id = models.OneToOneField(GroupProfile, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.group_id
+>>>>>>> master
 
     def __str__(self):
         return f"ConstitutionTable for Group ID: {self.group_id}  - Has Constitution: {self.hasConstitution}"
@@ -58,8 +98,13 @@ class Users(models.Model):
     next_of_kin_name = models.TextField()
     next_of_kin_has_phone_number = models.IntegerField(default=None, blank=True, null=True)
     next_of_kin_phone_number = models.TextField(default=None, blank=True, null=True)
+<<<<<<< HEAD
     pwd_type = models.TextField(default=None, blank=True, null=True)
     sync_flag = models.IntegerField(default=0)
+=======
+    pwd_type = models.TextField()
+    sync_flag = models.IntegerField(default=1)
+>>>>>>> master
     
     def __str__(self):
         return f"{self.fname} {self.lname}"

@@ -7,6 +7,7 @@ from digi_save_vsla_api.serializers import UsersSerializer
 
 @api_view(['GET', 'POST'])
 def users_list(request):
+<<<<<<< HEAD
     data = request.data
     print("Received data:", data.get('fname'), data.get('lname'))
     try:
@@ -97,6 +98,24 @@ def users_list(request):
             'status': 'error',
             'message': str(e),
         }, status=500)
+=======
+    print("Received data:", request.data)
+    if request.method == 'GET':
+        users = Users.objects.all()
+        serializer = UsersSerializer(users, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        print("Received data:", request.data)  # Add this line for debugging
+        serializer = UsersSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)  # Add this line for debugging
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+>>>>>>> master
+
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
