@@ -2,46 +2,43 @@ from django.db import models
 
 # Create your models here.
 class GroupProfile(models.Model):
-    groupName = models.TextField()
-    countryOfOrigin = models.TextField()
-    meetingLocation = models.TextField()
-    groupStatus = models.TextField()
-    groupLogoPath = models.TextField()
-    partnerID = models.TextField(default=None, blank=True, null=True)
-    workingWithPartner = models.TextField()
-    isWorkingWithPartner = models.BooleanField()
-    numberOfCycles = models.TextField(default=None, blank=True, null=True)
-    numberOfMeetings = models.TextField(default=None, blank=True, null=True)
-    loanFund = models.TextField()
-    socialFund = models.TextField()
-    sync_flag = models.IntegerField(default=1)
-    
+    groupName = models.CharField(max_length=255, default=None, blank=True, null=True)
+    countryOfOrigin = models.CharField(max_length=255, default=None, blank=True, null=True)
+    meetingLocation = models.CharField(max_length=255, default=None, blank=True, null=True)
+    groupStatus = models.CharField(max_length=255, default=None, blank=True, null=True)
+    groupLogoPath = models.CharField(max_length=255, default=None, blank=True, null=True)
+    partnerID = models.CharField(max_length=255, default=None, blank=True, null=True)
+    workingWithPartner = models.CharField(max_length=255, default=None, blank=True, null=True)
+    isWorkingWithPartner = models.IntegerField(default=None, blank=True, null=True)
+    numberOfCycles = models.CharField(max_length=255, default=None, blank=True, null=True)
+    numberOfMeetings = models.CharField(max_length=255, default=None, blank=True, null=True)
+    loanFund = models.CharField(max_length=255, default=None, blank=True, null=True)
+    socialFund = models.CharField(max_length=255, default=None, blank=True, null=True)
+    sync_flag = models.IntegerField(default=0)
+
     def __str__(self):
         return self.groupName
-
-
+    
 class ConstitutionTable(models.Model):
-    hasConstitution = models.IntegerField()
-    constitutionFiles = models.TextField(default=None, blank=True, null=True)
-    usesGroupShares = models.IntegerField()
-    shareValue = models.FloatField()
-    maxSharesPerMember = models.IntegerField()
-    minSharesRequired = models.IntegerField()
-    frequencyOfContributions = models.TextField()
-    offersLoans = models.IntegerField()
-    maxLoanAmount = models.FloatField()
-    interestRate = models.FloatField()
-    interestMethod = models.TextField()
-    loanTerms = models.TextField()
-    registrationFee = models.TextField()
-    selectedCollateralRequirements = models.TextField(default=None, blank=True, null=True)
-    sync_flag = models.IntegerField(default=1)
-    
-    group_id = models.OneToOneField(GroupProfile, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.group_id
+    group_id = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
+    hasConstitution = models.IntegerField(default=None, blank=True, null=True)
+    constitutionFiles = models.BinaryField(default=None, blank=True, null=True)
+    usesGroupShares = models.BooleanField(default=None, blank=True, null=True)
+    shareValue = models.FloatField(default=None, blank=True, null=True)
+    maxSharesPerMember = models.IntegerField(default=None, blank=True, null=True)
+    minSharesRequired = models.IntegerField(default=None, blank=True, null=True)
+    frequencyOfContributions = models.CharField(max_length=255, default=None, blank=True, null=True)
+    offersLoans = models.BooleanField(default=None, blank=True, null=True)
+    maxLoanAmount = models.FloatField(default=None, blank=True, null=True)
+    interestRate = models.FloatField(default=None, blank=True, null=True)
+    interestMethod = models.CharField(max_length=255, default=None, blank=True, null=True)
+    loanTerms = models.CharField(max_length=255, default=None, blank=True, null=True)
+    registrationFee = models.CharField(max_length=255, default=None, blank=True, null=True)
+    selectedCollateralRequirements = models.CharField(max_length=255, default=None, blank=True, null=True)
+    sync_flag = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f"ConstitutionTable for Group ID: {self.group_id}  - Has Constitution: {self.hasConstitution}"
 
 class Users(models.Model):
     unique_code = models.TextField()
@@ -52,17 +49,17 @@ class Users(models.Model):
     sex = models.TextField()
     country = models.TextField()
     date_of_birth = models.TextField()
-    image = models.TextField()
+    image = models.TextField(default=None, blank=True, null=True)
     district = models.TextField()
     subCounty = models.TextField()
     village = models.TextField()
     number_of_dependents = models.TextField()
     family_information = models.TextField()
     next_of_kin_name = models.TextField()
-    next_of_kin_has_phone_number = models.BooleanField()
+    next_of_kin_has_phone_number = models.IntegerField(default=None, blank=True, null=True)
     next_of_kin_phone_number = models.TextField(default=None, blank=True, null=True)
-    pwd_type = models.TextField()
-    sync_flag = models.IntegerField(default=1)
+    pwd_type = models.TextField(default=None, blank=True, null=True)
+    sync_flag = models.IntegerField(default=0)
     
     def __str__(self):
         return f"{self.fname} {self.lname}"
@@ -76,7 +73,7 @@ class GroupMembers(models.Model):
         return self.group
 
 class CycleSchedules(models.Model):
-    group = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GroupProfile, on_delete=models.CASCADE)
     meeting_duration = models.TextField()
     number_of_meetings = models.IntegerField()
     meeting_frequency = models.TextField()
@@ -86,7 +83,7 @@ class CycleSchedules(models.Model):
     sync_flag = models.IntegerField(default=1)
     
     def __str__(self):
-        return self.group
+        return f"CycleSchedules for Group ID: {self.group_id}"
     
 
 class Positions(models.Model):
